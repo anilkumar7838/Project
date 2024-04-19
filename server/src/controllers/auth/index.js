@@ -120,5 +120,7 @@ export const GenerateRefreshToken = async (req, res) => {
         }
       }
     );
-  } catch (error) {}
+  } catch (error) {
+    res.status(500).json({ message: "something went wrong" });
+  }
 };

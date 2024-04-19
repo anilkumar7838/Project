@@ -3,8 +3,11 @@ import cors from "cors";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
+
 import { connectMongoDb } from "./db/mongodb.js";
 import { router as authRoute } from "./routes/auth/index.js";
+import { router as userRoute } from "./routes/auth/index.js";
+
 const clientUrl =
   process.env.NODE_ENV === "development"
     ? process.env.PROD_CLIENT_URL
@@ -27,6 +30,7 @@ dotenv.config();
 
 //routes
 app.use("/api/auth", authRoute);
+app.use("/api/user", userRoute);
 
 app.listen(process.env.PORT, (err) => {
   if (err) {
