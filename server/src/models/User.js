@@ -6,7 +6,7 @@ const UserSchema = mongoose.Schema(
         type:String,
         required:true,
     },
-    collegeId:{
+    collegeid:{
         type:String,
         required:true,
         unique:true
