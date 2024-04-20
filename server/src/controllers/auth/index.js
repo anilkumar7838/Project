@@ -9,14 +9,14 @@ export const SignIn = async (req, res) => {
     const user = await User.findOne({ collegeid });
 
     if (!user) {
-      res.status(404).json({ message: "user not registered" });
+      res.status(404).json({ message: "User Not Registered" });
       return;
     }
 
     const isPasswordCorrect = bcrypt.compareSync(password, user.password);
 
     if (!isPasswordCorrect) {
-      return res.status(401).json({ message: "id or password incorrect" });
+      return res.status(401).json({ message: "Id or Password Incorrect" });
     }
 
     const access_token = jwt.sign(
@@ -45,10 +45,10 @@ export const SignIn = async (req, res) => {
       secure: true,
       maxAge: 24 * 60 * 60 * 1000,
     });
-    return res.status(200).json({ message: "login successful", access_token });
+    return res.status(200).json({ message: "Login Successful", access_token });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "something went wrong" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -70,10 +70,10 @@ export const SignUp = async (req, res) => {
       role,
     });
     if (!newUser) {
-      return res.status(424).json({ message: "error at creating the account" });
+      return res.status(424).json({ message: "Error at Creating The Account" });
     }
     return res.status(201).json({
-      message: "user created successfully",
+      message: "User Created Successfully",
       user: {
         name: newUser.name,
         collegeid: newUser.collegeid,
@@ -82,7 +82,7 @@ export const SignUp = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "something went wrong" });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -121,6 +121,6 @@ export const GenerateRefreshToken = async (req, res) => {
       }
     );
   } catch (error) {
-    res.status(500).json({ message: "something went wrong" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };

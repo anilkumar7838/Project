@@ -11,4 +11,4 @@ export const router = express.Router();
 router.post("/signin", SignIn);
 router.post("/signup", SignUp);
 router.post("/forgetpassword", ForgetPassword);
-router.post("/refresh", GenerateRefreshToken);
+router.get("/refresh", GenerateRefreshToken);

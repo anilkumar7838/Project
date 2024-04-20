@@ -8,11 +8,13 @@ import { connectMongoDb } from "./db/mongodb.js";
 import { router as authRoute } from "./routes/auth/index.js";
 import { router as userRoute } from "./routes/auth/index.js";
 
+const app = express();
+dotenv.config();
+
 const clientUrl =
   process.env.NODE_ENV === "development"
-    ? process.env.PROD_CLIENT_URL
-    : process.env.DEV_CLIENT_URL;
-const app = express();
+    ? process.env.DEV_CLIENT_URL
+    : process.env.PROD_CLIENT_URL;
 
 app.use(
   cors({
@@ -25,8 +27,6 @@ app.use(morgan("tiny"));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-
-dotenv.config();
 
 //routes
 app.use("/api/auth", authRoute);
