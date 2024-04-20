@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser";
 
 import { connectMongoDb } from "./db/mongodb.js";
 import { router as authRoute } from "./routes/auth/index.js";
-import { router as userRoute } from "./routes/auth/index.js";
+import { router as userRoute } from "./routes/user/index.js";
 
 const app = express();
 dotenv.config();

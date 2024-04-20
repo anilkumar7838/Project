@@ -26,8 +26,11 @@ export default function App() {
   const RequiredAuth = ({ type, children }) => {
     if (type === "public") return children;
     if (type === "protected") {
-      if (islogged) return children;
-      return <Navigate to="/login" replace />;
+      if (islogged) {
+        return children;
+      } else {
+        return <Navigate to="/signin" replace />;
+      }
     }
     if (islogged) return <Navigate to="/" replace />;
     return children;
@@ -45,7 +48,7 @@ export default function App() {
       <Routes>
         <Route
           path="/"
-          element={<RequiredAuth type="public">{<Home />}</RequiredAuth>}
+          element={<RequiredAuth type="protected">{<Home />}</RequiredAuth>}
         />
         <Route
           path="/signup"

@@ -52,7 +52,8 @@ export const SignIn = async (req, res) => {
     });
     return res.status(200).json({
       message: "Login Successful",
-      data: { userid: user._id, collegeid: user.collegeid, role: user.role },
+      access_token,
+      // data: { userid: user._id, collegeid: user.collegeid, role: user.role },
     });
   } catch (err) {
     console.log(err);
@@ -147,12 +148,18 @@ export const GenerateAccessToken = async (req, res, next) => {
 
 export const isAuthorised = async (req, res, next) => {
   const access_token = req.cookies.access_token;
+  const refresh_token = req.cookies.refresh_token;
+  if (!refresh_token) {
+    return res.status(406).json({ logged: false, message: "Unauthorised" });
+  }
   if (!access_token) {
     GenerateAccessToken(req, res, next); // Pass next to GenerateAccessToken
   } else {
     jwt.verify(access_token, process.env.JWT_ACCESS_TOKEN, (err, decoded) => {
       if (err) {
-        return res.status(406).json({ message: "Invalid Token" });
+        return res
+          .status(406)
+          .json({ logged: false, message: "Invalid Token" });
       } else {
         req.isLoggedIn = true;
         req.access_token = access_token;
@@ -167,11 +174,11 @@ export const isLoggedIn = async (req, res) => {
     if (req.isLoggedIn) {
       return res
         .status(200)
-        .json({ message: "true", access_token: req.access_token });
+        .json({ logged: true, access_token: req.access_token });
     } else {
-      return res.status(200).json({ message: "false" });
+      return res.status(200).json({ logged: false });
     }
   } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ logged: false, message: "Internal server error" });
   }
 };

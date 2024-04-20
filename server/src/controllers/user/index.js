@@ -1,4 +1,4 @@
-import { User } from "../../models/User";
+import { User } from "../../models/User.js";
 
 export const getAllusers = async (req, res) => {
   try {
@@ -11,11 +11,14 @@ export const getAllusers = async (req, res) => {
 };
 export const getUser = async (req, res) => {
   try {
-    const user = await User.findOne({ collegeid: req.body.collegeid });
+    var user = await User.findOne({
+      collegeid: req.body.collegeid,
+    });
+    var { password, ...user } = user._doc;
     if (!user) {
-      res.status(404).json({ message: `User Not Found` });
+      return res.status(404).json({ message: `User Not Found` });
     }
-    res.status(200).json({ message: `user`, data: user });
+    res.status(200).json({ message: `user`, user });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -31,7 +34,7 @@ export const updateUser = async (req, res) => {
     if (!user) {
       res.status(404).json({ message: `User not Found` });
     }
-    res.status(200).json({ message: `updated user`, data: user });
+    res.status(200).json({ message: `updated user`, user });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal Server Error" });

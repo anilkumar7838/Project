@@ -12,9 +12,10 @@ export const isLoggedIn = async () => {
       headers: { "Content-Type": "application/json" },
       credentials: "include",
     });
-    const { message, access_token } = await res.json();
+    const { logged, access_token } = await res.json();
     localStorage.setItem("access_token", access_token);
-    if (message) return message;
+
+    return logged;
   } catch (error) {
     try {
       const res = await fetch("http://localhost:3001/api/auth/isloggedin", {
@@ -22,9 +23,10 @@ export const isLoggedIn = async () => {
         headers: { "Content-Type": "application/json" },
         credentials: "include",
       });
-      const { message, access_token } = await res.json();
+      const { logged, access_token } = await res.json();
       localStorage.setItem("access_token", access_token);
-      if (message) return message;
+      console.log(logged);
+      return logged;
     } catch (e) {
       console.log(e);
       return false;

@@ -7,7 +7,7 @@ export default function SignIn() {
   const [toggle, setToggle] = useState("student");
   const [collegeid, setCollegeId] = useState("");
   const [password, setPassword] = useState("");
-
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
@@ -23,6 +23,7 @@ export default function SignIn() {
       }
       toast.success(message);
       localStorage.setItem("access_token", access_token);
+      return navigate("/");
     } catch (error) {
       console.log(error);
     }
