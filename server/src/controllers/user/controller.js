@@ -43,11 +43,9 @@ export const updateUser = async (req, res) => {
 export const deleteUser = async (req, res) => {
   const { collegeid } = req.body;
   try {
-    const response = await Collection.findOneAndDelete({ collegeid });
+    const response = await User.findOneAndDelete({ collegeid });
     if (response) res.status(200).json({ message: `user deleted succesfully` });
     else res.status(404).json({ message: `user not found` });
-
-    return response;
   } catch (e) {
     res.status(500).json({ message: "Internal Server Error" });
   }
