@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { isLoggedIn } from "../utils/islogged-in";
 
 export default function SignUp() {
   const [role, setRole] = useState("student");

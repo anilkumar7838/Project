@@ -7,7 +7,6 @@ export const SignIn = async (req, res) => {
   try {
     const { collegeid, password } = req.body;
     const user = await User.findOne({ collegeid });
-
     if (!user) {
       res.status(404).json({ message: "User Not Registered" });
       return;
@@ -45,7 +44,16 @@ export const SignIn = async (req, res) => {
       secure: true,
       maxAge: 24 * 60 * 60 * 1000,
     });
-    return res.status(200).json({ message: "Login Successful", access_token });
+    res.cookie("access_token", access_token, {
+      httpOnly: true,
+      sameSite: "None",
+      secure: true,
+      maxAge: 10 * 60 * 1000,
+    });
+    return res.status(200).json({
+      message: "Login Successful",
+      data: { userid: user._id, collegeid: user.collegeid, role: user.role },
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Internal Server Error" });
@@ -88,10 +96,11 @@ export const SignUp = async (req, res) => {
 
 export const ForgetPassword = async () => {};
 
-export const GenerateRefreshToken = async (req, res) => {
+export const GenerateAccessToken = async (req, res, next) => {
   try {
-    if (req.cookies?.refresh_token) {
-      return res.status(406).json({ message: "Unauthorized" });
+    if (!req.cookies?.refresh_token) {
+      res.status(406).json({ message: "Unauthorized" });
+      return false;
     }
     const refresh_token = req.cookies.refresh_token;
     jwt.verify(
@@ -99,7 +108,8 @@ export const GenerateRefreshToken = async (req, res) => {
       process.env.JWT_REFRESH_TOKEN,
       async (err, decoded) => {
         if (err) {
-          return res.status(406).json({ message: "Unauthorized" });
+          res.status(406).json({ message: "Unauthorized" });
+          return false;
         } else {
           const user = await User.findOne({
             collegeid: decoded.collegeid,
@@ -116,11 +126,52 @@ export const GenerateRefreshToken = async (req, res) => {
               expiresIn: "10m",
             }
           );
-          return res.status(201).json({ access_token });
+          res.cookie("access_token", access_token, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 10 * 60 * 1000,
+          });
+          req.isLoggedIn = true;
+          req.access_token = access_token;
+          next(); // Call next to move to the next middleware
         }
       }
     );
   } catch (error) {
+    console.log(400);
     res.status(500).json({ message: "Internal Server Error" });
+    return false;
+  }
+};
+
+export const isAuthorised = async (req, res, next) => {
+  const access_token = req.cookies.access_token;
+  if (!access_token) {
+    GenerateAccessToken(req, res, next); // Pass next to GenerateAccessToken
+  } else {
+    jwt.verify(access_token, process.env.JWT_ACCESS_TOKEN, (err, decoded) => {
+      if (err) {
+        return res.status(406).json({ message: "Invalid Token" });
+      } else {
+        req.isLoggedIn = true;
+        req.access_token = access_token;
+        next();
+      }
+    });
+  }
+};
+
+export const isLoggedIn = async (req, res) => {
+  try {
+    if (req.isLoggedIn) {
+      return res
+        .status(200)
+        .json({ message: "true", access_token: req.access_token });
+    } else {
+      return res.status(200).json({ message: "false" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
   }
 };
