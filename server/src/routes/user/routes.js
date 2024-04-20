@@ -5,7 +5,7 @@ import {
   getAllusers,
   getUser,
   updateUser,
-} from "../../controllers/user/index.js";
+} from "../../controllers/user/controller.js";
 
 export const router = express.Router();
 // router.post("/create", GenerateRefreshToken);

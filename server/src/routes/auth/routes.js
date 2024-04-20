@@ -6,7 +6,7 @@ import {
   SignUp,
   isAuthorised,
   isLoggedIn,
-} from "../../controllers/auth/index.js";
+} from "../../controllers/auth/controller.js";
 
 export const router = express.Router();
 
