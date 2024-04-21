@@ -5,8 +5,24 @@ import { isLoggedIn } from "../utils/islogged-in";
 import { toast } from "react-toastify";
 import FacultyDashboard from "../components/FacultyDashboard";
 import StudentDashBoard from "../components/StudentDashboard";
+import { useLocation, useNavigate } from "react-router-dom";
 export default function Home() {
   const [user, setUser] = useState({});
+  const navigate = useNavigate();
+  const signOut = async () => {
+    try {
+      const res = await fetch("http://localhost:3001/api/auth/signout", {
+        method: "GET",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+      });
+      console.log(await res.json());
+      localStorage.clear();
+    } catch (error) {
+      console.log(error);
+    }
+    navigate("/signin");
+  };
 
   useEffect(() => {
     const getUser = async () => {
@@ -25,7 +41,7 @@ export default function Home() {
         setUser(data.user);
       } catch (error) {
         console.log(error);
-        toast.error("Error while fetching user");
+        // toast.error("Error while fetching user");
       }
     };
     getUser();
@@ -36,7 +52,8 @@ export default function Home() {
       <nav className="w-full flex flex-wrap  justify-between mx-auto px-4 py-2 bg-white items-baseline lg:px-5 ">
         <div
           type="button"
-          className="text-white bg-blue-700 hover:bg-blue-800  font-medium rounded-lg text-smtext-center p-2 "
+          onClick={() => signOut()}
+          className="cursor-pointer text-white bg-blue-700 hover:bg-blue-800  font-medium rounded-lg text-smtext-center p-2 "
         >
           Sign Out
         </div>
@@ -46,9 +63,9 @@ export default function Home() {
         </div>
       </nav>
       {user && user?.role === "faculty" ? (
-        <FacultyDashboard />
+        <FacultyDashboard collegeid={user.collegeid} />
       ) : (
-        <StudentDashBoard />
+        <StudentDashBoard collegeid={user.collegeid} />
       )}
     </div>
   );

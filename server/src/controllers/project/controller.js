@@ -2,12 +2,13 @@ import { Project } from "../../models/Project.js";
 
 export const createProject = async (req, res) => {
   try {
-    const project = await Project.create(data);
+    const project = await Project.create(req.body);
     if (!project) {
       return res.status(400).json({ message: "something went wrong" });
     }
     res.status(201).json({ message: "project created successfully", project });
   } catch (e) {
+    console.log(e);
     res.status(500).json({ message: "interval server error" });
   }
 };
@@ -25,7 +26,7 @@ export const getAllProjects = async (req, res) => {
 export const getSingleProject = async (req, res) => {
   try {
     const project = await Project.findOne({
-      _id: req.body.projectid,
+      student_collegeid: req.body.collegeid,
     });
     if (!project) {
       return res.status(404).json({ message: `Project Not Found` });

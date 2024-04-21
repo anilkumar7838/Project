@@ -3,7 +3,7 @@ import mongoose, { Types } from "mongoose";
 const ProjectSchema = mongoose.Schema(
   {
     student_collegeid: {
-      type: Types.ObjectId,
+      type: String,
       required: true,
     },
     mentor: {

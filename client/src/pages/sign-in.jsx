@@ -1,13 +1,20 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { isLoggedIn } from "../utils/islogged-in";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export default function SignIn() {
   const [toggle, setToggle] = useState("student");
   const [collegeid, setCollegeId] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+  const [logged, setIslogged] = useState(false);
+
+  useEffect(() => {
+    isLoggedIn()
+      .then((data) => setIslogged(data))
+      .catch((e) => console.log(e));
+  }, []);
+
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
@@ -19,15 +26,20 @@ export default function SignIn() {
       });
       const { message, access_token } = await res.json();
       if (!access_token) {
-        return toast.error(message);
+        toast.error(message);
+        return;
       }
+      setIslogged(true);
       toast.success(message);
       localStorage.setItem("access_token", access_token);
-      return navigate("/");
     } catch (error) {
       console.log(error);
     }
   };
+
+  if (logged) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <div className="background-image">

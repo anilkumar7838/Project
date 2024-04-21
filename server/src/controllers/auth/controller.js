@@ -95,6 +95,26 @@ export const SignUp = async (req, res) => {
   }
 };
 
+export const SignOut = (req, res) => {
+  try {
+    res.cookie("access_token", "", {
+      httpOnly: true,
+      sameSite: "None",
+      secure: true,
+      maxAge: 1,
+    });
+    res.cookie("refresh_token", "", {
+      httpOnly: true,
+      sameSite: "None",
+      secure: true,
+      maxAge: 1,
+    });
+    res.status(200).json({ message: "successfully deleted cookies" });
+  } catch (error) {
+    res.status(500).json({ message: "something went wrong" });
+  }
+};
+
 export const ForgetPassword = async () => {};
 
 export const GenerateAccessToken = async (req, res, next) => {
@@ -149,6 +169,7 @@ export const GenerateAccessToken = async (req, res, next) => {
 export const isAuthorised = async (req, res, next) => {
   const access_token = req.cookies.access_token;
   const refresh_token = req.cookies.refresh_token;
+  console.log(access_token, refresh_token);
   if (!refresh_token) {
     return res.status(406).json({ logged: false, message: "Unauthorised" });
   }
