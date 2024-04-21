@@ -1,19 +1,15 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { isLoggedIn } from "../utils/islogged-in";
 import { Navigate, useNavigate } from "react-router-dom";
+import { AuthContext } from "../App";
 
 export default function SignIn() {
+  const { islogged, setIslogged } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [toggle, setToggle] = useState("student");
   const [collegeid, setCollegeId] = useState("");
   const [password, setPassword] = useState("");
-  const [logged, setIslogged] = useState(false);
-
-  useEffect(() => {
-    isLoggedIn()
-      .then((data) => setIslogged(data))
-      .catch((e) => console.log(e));
-  }, []);
 
   const handleSubmit = async (e) => {
     try {
@@ -37,9 +33,12 @@ export default function SignIn() {
     }
   };
 
-  if (logged) {
-    return <Navigate to="/" replace />;
-  }
+  useEffect(() => {
+    if (islogged) {
+      navigate("/");
+      return;
+    }
+  }, []);
 
   return (
     <div className="background-image">

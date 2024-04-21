@@ -4,12 +4,18 @@ import SignIn from "./pages/sign-in";
 import SignUp from "./pages/sign-up";
 import ForgotPassowrd from "./pages/forgot-password";
 import Home from "./pages/Home";
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { isLoggedIn } from "./utils/islogged-in";
 
+export const AuthContext = createContext({
+  islogged: false,
+  user: null,
+});
 export default function App() {
   const [islogged, setIslogged] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+
   useEffect(() => {
     isLoggedIn()
       .then((data) => {
@@ -37,34 +43,36 @@ export default function App() {
   };
 
   return (
-    <BrowserRouter>
-      <ToastContainer
-        position="top-center"
-        closeOnClick
-        pauseOnHover
-        draggable
-        autoClose={1500}
-      />
-      <Routes>
-        <Route
-          path="/"
-          element={<RequiredAuth type="protected">{<Home />}</RequiredAuth>}
+    <AuthContext.Provider value={{ user, setUser, islogged, setIslogged }}>
+      <BrowserRouter>
+        <ToastContainer
+          position="top-center"
+          closeOnClick
+          pauseOnHover
+          draggable
+          autoClose={1500}
         />
-        <Route
-          path="/signup"
-          element={<RequiredAuth type="auth">{<SignUp />}</RequiredAuth>}
-        />
-        <Route
-          path="/signin"
-          element={<RequiredAuth type="auth">{<SignIn />}</RequiredAuth>}
-        />
-        <Route
-          path="/forgotpassword"
-          element={
-            <RequiredAuth type="auth">{<ForgotPassowrd />}</RequiredAuth>
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+        <Routes>
+          <Route
+            path="/"
+            element={<RequiredAuth type="protected">{<Home />}</RequiredAuth>}
+          />
+          <Route
+            path="/signup"
+            element={<RequiredAuth type="auth">{<SignUp />}</RequiredAuth>}
+          />
+          <Route
+            path="/signin"
+            element={<RequiredAuth type="auth">{<SignIn />}</RequiredAuth>}
+          />
+          <Route
+            path="/forgotpassword"
+            element={
+              <RequiredAuth type="auth">{<ForgotPassowrd />}</RequiredAuth>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </AuthContext.Provider>
   );
 }

@@ -1,14 +1,16 @@
 import { Container } from "postcss";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { isLoggedIn } from "../utils/islogged-in";
 import { toast } from "react-toastify";
 import FacultyDashboard from "../components/FacultyDashboard";
 import StudentDashBoard from "../components/StudentDashboard";
 import { useLocation, useNavigate } from "react-router-dom";
+import { AuthContext } from "../App";
 export default function Home() {
-  const [user, setUser] = useState({});
   const navigate = useNavigate();
+  const { islogged, setIslogged } = useContext(AuthContext);
+  const [user, setUser] = useState({});
   const signOut = async () => {
     try {
       const res = await fetch("http://localhost:3001/api/auth/signout", {
@@ -18,10 +20,10 @@ export default function Home() {
       });
       console.log(await res.json());
       localStorage.clear();
+      setIslogged(false);
     } catch (error) {
       console.log(error);
     }
-    navigate("/signin");
   };
 
   useEffect(() => {
@@ -45,6 +47,13 @@ export default function Home() {
       }
     };
     getUser();
+  }, []);
+
+  useEffect(() => {
+    if (!islogged) {
+      navigate("/signin");
+      return;
+    }
   }, []);
 
   return (

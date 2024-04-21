@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { isLoggedIn } from "../utils/islogged-in";
 
 export default function SignUp() {
+  const navigate = useNavigate();
   const [role, setRole] = useState("student");
   const [collegeid, setCollegeId] = useState("");
   const [name, setName] = useState("");
@@ -29,7 +30,8 @@ export default function SignUp() {
         return toast.error(message);
       }
       toast.success(message);
-      console.log(user);
+      navigate("/signin");
+      // console.log(user);
     } catch (error) {
       toast.error("Something went wrong!");
       console.log({ error }, "kbk");
@@ -138,7 +140,7 @@ export default function SignUp() {
                 onClick={handleSubmit}
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Sign in
+                Sign Up
               </button>
             </div>
           </form>

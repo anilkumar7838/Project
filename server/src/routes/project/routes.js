@@ -8,9 +8,11 @@ import {
 } from "../../controllers/project/controller.js";
 
 const varifyFaculty = (req, res, next) => {
+  //todo
   next();
 };
 const varifyStudent = (req, res, next) => {
+  //todo
   next();
 };
 
