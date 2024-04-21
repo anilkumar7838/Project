@@ -6,7 +6,6 @@ import ForgotPassowrd from "./pages/forgot-password";
 import Home from "./pages/Home";
 import { createContext, useEffect, useState } from "react";
 import { isLoggedIn } from "./utils/islogged-in";
-
 export const AuthContext = createContext({
   islogged: false,
   user: null,
