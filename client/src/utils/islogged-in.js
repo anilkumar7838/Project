@@ -1,4 +1,5 @@
 import { jwtDecode } from "jwt-decode";
+import { URL } from "./url";
 export const isLoggedIn = async () => {
   try {
     if (localStorage.getItem("access_token")) {
@@ -7,7 +8,7 @@ export const isLoggedIn = async () => {
         return true;
       }
     }
-    const res = await fetch("http://localhost:3001/api/auth/isloggedin", {
+    const res = await fetch(`${URL}/api/auth/isloggedin`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -18,7 +19,7 @@ export const isLoggedIn = async () => {
     return logged;
   } catch (error) {
     try {
-      const res = await fetch("http://localhost:3001/api/auth/isloggedin", {
+      const res = await fetch(`${URL}/api/auth/isloggedin`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

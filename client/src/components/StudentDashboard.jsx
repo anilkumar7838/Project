@@ -1,6 +1,7 @@
 import { data } from "autoprefixer";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { URL } from "../utils/url";
 
 export default function StudentDashBoard({ collegeid }) {
   const [hasporoject, setHasPorject] = useState(false);
@@ -8,7 +9,7 @@ export default function StudentDashBoard({ collegeid }) {
   useEffect(() => {
     const get = async () => {
       try {
-        const res = await fetch("http://localhost:3001/api/project/getone", {
+        const res = await fetch(`${URL}/api/project/getone`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
