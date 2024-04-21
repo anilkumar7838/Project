@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { isLoggedIn } from "../utils/islogged-in";
 
 export default function SignUp() {
   const navigate = useNavigate();

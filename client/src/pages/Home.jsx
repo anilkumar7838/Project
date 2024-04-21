@@ -1,11 +1,9 @@
-import { Container } from "postcss";
 import { useContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { isLoggedIn } from "../utils/islogged-in";
-import { toast } from "react-toastify";
 import FacultyDashboard from "../components/FacultyDashboard";
 import StudentDashBoard from "../components/StudentDashboard";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../App";
 export default function Home() {
   const navigate = useNavigate();
@@ -54,7 +52,7 @@ export default function Home() {
       navigate("/signin");
       return;
     }
-  }, []);
+  }, [islogged, navigate]);
 
   return (
     <div className="bg-gray-200" style={{ height: "100vh" }}>

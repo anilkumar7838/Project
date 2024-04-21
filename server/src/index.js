@@ -8,6 +8,7 @@ import { connectMongoDb } from "./db/mongodb.js";
 import { router as authRoute } from "./routes/auth/routes.js";
 import { router as userRoute } from "./routes/user/routes.js";
 import { router as projectRoute } from "./routes/project/routes.js";
+import { isAuthorised } from "./controllers/auth/controller.js";
 const app = express();
 dotenv.config();
 
@@ -31,7 +32,7 @@ app.use(express.urlencoded({ extended: true }));
 //routes
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
-app.use("/api/project", projectRoute);
+app.use("/api/project", isAuthorised, projectRoute);
 app.listen(process.env.PORT, (err) => {
   if (err) {
     console.log("Error occured while starting the server", err);

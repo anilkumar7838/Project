@@ -160,16 +160,17 @@ export const GenerateAccessToken = async (req, res, next) => {
       }
     );
   } catch (error) {
-    console.log(400);
     res.status(500).json({ message: "Internal Server Error" });
     return false;
   }
 };
 
 export const isAuthorised = async (req, res, next) => {
+  console.log("req.body.collegeid");
+
   const access_token = req.cookies.access_token;
   const refresh_token = req.cookies.refresh_token;
-  console.log(access_token, refresh_token);
+  // console.log(access_token, refresh_token);
   if (!refresh_token) {
     return res.status(406).json({ logged: false, message: "Unauthorised" });
   }

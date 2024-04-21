@@ -5,16 +5,9 @@ import {
   getAllProjects,
   getSingleProject,
   updateProject,
+  varifyFaculty,
+  varifyStudent,
 } from "../../controllers/project/controller.js";
-
-const varifyFaculty = (req, res, next) => {
-  //todo
-  next();
-};
-const varifyStudent = (req, res, next) => {
-  //todo
-  next();
-};
 
 export const router = express.Router();
 

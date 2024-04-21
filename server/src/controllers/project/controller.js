@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken";
 import { Project } from "../../models/Project.js";
 
 export const createProject = async (req, res) => {
@@ -64,5 +65,47 @@ export const deleteProject = async (req, res) => {
     else res.status(404).json({ message: `project not found` });
   } catch (e) {
     res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const varifyFaculty = (req, res, next) => {
+  try {
+    const access_token = req.cookies.access_token;
+    jwt.verify(access_token, process.env.JWT_ACCESS_TOKEN, (err, decoded) => {
+      if (err) {
+        return res.status(406).json({ message: "Invalid Token" });
+      } else {
+        if (decoded.role === "faculty") {
+          next();
+          return;
+        }
+        return res.status(406).json({ message: "Unauthorised" });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: "something went wrong" });
+  }
+};
+export const varifyStudent = (req, res, next) => {
+  try {
+    const access_token = req.cookies.access_token;
+    jwt.verify(access_token, process.env.JWT_ACCESS_TOKEN, (err, decoded) => {
+      if (err) {
+        return res.status(406).json({ message: "Invalid Token" });
+      } else {
+        if (
+          decoded.role === "faculty" ||
+          req.body.collegeid === decoded.collegeid
+        ) {
+          next();
+          return;
+        }
+        return res.status(406).json({ message: "Unauthorised" });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: "something went wrong" });
   }
 };

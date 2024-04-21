@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { isLoggedIn } from "../utils/islogged-in";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../App";
 
 export default function SignIn() {
@@ -38,7 +37,7 @@ export default function SignIn() {
       navigate("/");
       return;
     }
-  }, []);
+  }, [islogged, navigate]);
 
   return (
     <div className="background-image">
