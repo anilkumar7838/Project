@@ -1,17 +1,30 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { URL } from "../utils/url";
+import { P } from "./p";
 
 export default function FacultyDashboard() {
-  const [projects, setProjects] = useState(null);
+  const [projects, setProjects] = useState(P);
   const [budgetstatus, setBudgetStatus] = useState("pending");
 
   const [pageno, setPageno] = useState(0);
   const [rowPerPage, setRowPerPage] = useState(5);
   const [projectPerPage, setProjectPerPage] = useState(null);
 
-  const changeRowPerPage = () => setRowPerPage();
+  const changeRowPerPage = (x) => {
+    setRowPerPage(x);
+  };
 
+  const changePageNumber = (x) => {
+    const index = (pageno + 1) * rowPerPage - 1;
+    if (x === -1 && pageno === 0) return;
+    if (x === 1 && pageno === projects.length / rowPerPage + 1) return;
+    setPageno(pageno + x);
+    console.log(index, projectPerPage);
+    if (x === 1)
+      setProjectPerPage(projects.slice(index + 1, index + 1 + rowPerPage));
+    else setProjectPerPage(projects.slice(index - rowPerPage, index));
+  };
   const [details, setDetails] = useState({
     email: "",
     project_id: "",
@@ -36,18 +49,20 @@ export default function FacultyDashboard() {
 
   useEffect(() => {
     const getProjects = async () => {
-      try {
-        const res = await fetch(`${URL}/api/project/getall`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-        });
-        const data = await res.json();
-        setProjects(data.allProjects);
-      } catch (error) {
-        console.log(error);
-        toast.error("error fetching projects");
-      }
+      //     try {
+      //       const res = await fetch(`${URL}/api/project/getall`, {
+      //         method: "GET",
+      //         headers: { "Content-Type": "application/json" },
+      //         credentials: "include",
+      //       });
+      //       const data = await res.json();
+      //       setProjects(data.allProjects);
+      setProjects(P);
+      setProjectPerPage(projects.slice(0, 5));
+      //     } catch (error) {
+      //       console.log(error);
+      //       toast.error("error fetching projects");
+      //     }
     };
     getProjects();
   }, []);
@@ -187,7 +202,8 @@ export default function FacultyDashboard() {
             </thead>
             <tbody>
               {projects &&
-                projects.map((project, i) => (
+                projectPerPage &&
+                projectPerPage.map((project, i) => (
                   <tr className="bg-white border-b  hover:bg-gray-50 " key={i}>
                     {Object.keys(project)
                       .filter((d) => {
@@ -220,42 +236,38 @@ export default function FacultyDashboard() {
             aria-label="Table navigation"
           >
             <span className="text-sm font-normal text-gray-500  mb-4 md:mb-0 block w-full md:inline md:w-auto">
-              Showing <span className="font-semibold text-gray-900 ">1-10</span>{" "}
-              of <span className="font-semibold text-gray-900 ">1000</span>
+              Showing
+              <span className="font-semibold text-gray-900 ">
+                {`${pageno * rowPerPage + 1} -
+                  ${pageno * rowPerPage + rowPerPage}`}
+              </span>{" "}
+              of{" "}
+              <span className="font-semibold text-gray-900 ">
+                {projects.length}
+              </span>
             </span>
             <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700"
-                >
-                  Previous
-                </a>
+              <li
+                onClick={() => changePageNumber(-1)}
+                className=" cursor-pointer flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700"
+              >
+                Previous
               </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-                >
-                  1
-                </a>
+              <li className="cursor-pointer flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+                {pageno + 1}
               </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-                >
-                  2
-                </a>
+              <li
+                onClick={() => changePageNumber(1)}
+                className="cursor-pointer flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
+              >
+                {pageno + 2}
               </li>
 
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700"
-                >
-                  Next
-                </a>
+              <li
+                onClick={() => changePageNumber(1)}
+                className="cursor-pointer flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700"
+              >
+                Next
               </li>
             </ul>
           </nav>
