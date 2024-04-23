@@ -56,12 +56,12 @@ export default function Home() {
   }, [islogged, navigate]);
 
   return (
-    <div className="bg-gray-200" style={{ height: "100vh" }}>
-      <nav className="w-full flex flex-wrap  justify-between mx-auto px-4 py-2 bg-white items-baseline lg:px-5 ">
+    <div className="bg-gray-200">
+      <nav className="w-full flex flex-wrap  justify-between mx-auto px-4 py-2 bg-white items-baseline lg:px-5  sticky top-0 shadow-md">
         <div
           type="button"
           onClick={() => signOut()}
-          className="cursor-pointer text-white bg-blue-700 hover:bg-blue-800  font-medium rounded-lg text-smtext-center p-2 "
+          className="cursor-pointer text-white bg-blue-700 hover:bg-blue-800  font-medium rounded-lg text-smtext-center p-2"
         >
           Sign Out
         </div>
@@ -70,10 +70,15 @@ export default function Home() {
           <p className="capitalize text-xs">{`${user.role} ID: ${user.collegeid}`}</p>
         </div>
       </nav>
-      {user && user?.role === "faculty" ? (
-        <FacultyDashboard collegeid={user.collegeid} />
-      ) : (
-        <StudentDashBoard collegeid={user.collegeid} />
+      {user && (
+        <>
+          {user?.role === "faculty" && (
+            <FacultyDashboard collegeid={user.collegeid} />
+          )}
+          {user.role === "student" && (
+            <StudentDashBoard collegeid={user.collegeid} />
+          )}
+        </>
       )}
     </div>
   );

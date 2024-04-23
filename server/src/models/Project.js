@@ -4,7 +4,6 @@ const ProjectSchema = mongoose.Schema(
   {
     student_collegeid: {
       type: String,
-      required: true,
     },
     mentor: {
       type: String,

@@ -73,7 +73,7 @@ export default function StudentDashBoard({ collegeid }) {
     downloadCsv();
   };
 
-  if (!hasporoject) return <div className="">no proj</div>;
+  if (!hasporoject) return <div className=""></div>;
   return (
     <div className="w-full max-w-md p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 mx-auto mt-10 flex flex-col">
       {project && (
