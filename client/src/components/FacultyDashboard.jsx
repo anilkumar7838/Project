@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { URL } from "../utils/url";
+import { url } from "../utils/url";
 import { P } from "./p";
 
 export default function FacultyDashboard() {
-  const [projects, setProjects] = useState(P);
+  const [projects, setProjects] = useState(null);
   const [budgetstatus, setBudgetStatus] = useState("pending");
 
   const [pageno, setPageno] = useState(0);
@@ -49,20 +49,20 @@ export default function FacultyDashboard() {
 
   useEffect(() => {
     const getProjects = async () => {
-      //     try {
-      //       const res = await fetch(`${URL}/api/project/getall`, {
-      //         method: "GET",
-      //         headers: { "Content-Type": "application/json" },
-      //         credentials: "include",
-      //       });
-      //       const data = await res.json();
-      //       setProjects(data.allProjects);
-      setProjects(P);
-      setProjectPerPage(projects.slice(0, 5));
-      //     } catch (error) {
-      //       console.log(error);
-      //       toast.error("error fetching projects");
-      //     }
+      try {
+        const res = await fetch(`${url}/api/project/getall`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        });
+        const data = await res.json();
+        setProjects(data.allProjects);
+        // setProjects(P);
+        setProjectPerPage(data.allProjects.slice(0, 5));
+      } catch (error) {
+        console.log(error);
+        toast.error("error fetching projects");
+      }
     };
     getProjects();
   }, []);
@@ -70,7 +70,7 @@ export default function FacultyDashboard() {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      const res = await fetch(`${URL}/api/project/create`, {
+      const res = await fetch(`${url}/api/project/create`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -243,7 +243,7 @@ export default function FacultyDashboard() {
               </span>{" "}
               of{" "}
               <span className="font-semibold text-gray-900 ">
-                {projects.length}
+                {projects?.length}
               </span>
             </span>
             <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">

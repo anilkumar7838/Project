@@ -5,14 +5,14 @@ import FacultyDashboard from "../components/FacultyDashboard";
 import StudentDashBoard from "../components/StudentDashboard";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../App";
-import { URL } from "../utils/url";
+import { url } from "../utils/url";
 export default function Home() {
   const navigate = useNavigate();
   const { islogged, setIslogged } = useContext(AuthContext);
   const [user, setUser] = useState({});
   const signOut = async () => {
     try {
-      const res = await fetch(`${URL}/api/auth/signout`, {
+      const res = await fetch(`${url}/api/auth/signout`, {
         method: "GET",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -30,7 +30,7 @@ export default function Home() {
       try {
         await isLoggedIn();
         const payload = jwtDecode(localStorage.getItem("access_token"));
-        const res = await fetch(`${URL}/api/user/getone`, {
+        const res = await fetch(`${url}/api/user/getone`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",

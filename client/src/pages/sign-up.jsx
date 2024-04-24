@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { url } from "../utils/url";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ export default function SignUp() {
         return;
       }
 
-      const res = await fetch(`${URL}/api/auth/signup`, {
+      const res = await fetch(`${url}/api/auth/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ collegeid, password, name, role }),
@@ -33,7 +34,7 @@ export default function SignUp() {
       // console.log(user);
     } catch (error) {
       toast.error("Something went wrong!");
-      console.log({ error }, "kbk");
+      // console.log({ error }, "kbk");
     }
   };
 

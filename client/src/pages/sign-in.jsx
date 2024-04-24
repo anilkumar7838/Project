@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../App";
-import { URL } from "../utils/url";
+import { url } from "../utils/url";
 
 export default function SignIn() {
   const { islogged, setIslogged } = useContext(AuthContext);
@@ -14,7 +14,7 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      const res = await fetch(`${URL}/api/auth/signin`, {
+      const res = await fetch(`${url}/api/auth/signin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
